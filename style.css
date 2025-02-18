@@ -1,0 +1,47 @@
+body{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    text-align: center;
+    background-color: rgb(242, 249, 239);
+    margin: 0;
+    padding: 0;
+}
+header{
+    background-color: yellow;
+    padding: 25px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);;
+}
+h1{
+    margin:10px;
+}
+#search{
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 5px;
+    width: 50%;
+    max-width: 400px;
+    border: 2px solid #2a75bb;
+}
+main{
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+#pokedox{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    max-width: 800px;
+}
+button{
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 20px;
+    background-color: #2a75bb;
+    color: #ffffff;
+    cursor: pointer;
+    border: none;
+}
+button:disabled{
+    background-color: #ccc;
+    cursor: not-allowed;
+}
