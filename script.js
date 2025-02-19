@@ -11,83 +11,96 @@ document.addEventListener("DOMContentLoaded", () => {
     const nextBtn = document.getElementById("next");
     const pageInfo = document.getElementById("page-info");
 
-    const pokemonPerPage = 20;
-    let allPokemon = [];   //stores all Pokémon data after fetching it
-    let currentPage = 1;
+    let currentOffset = 0;
+    const limit = 20;
+    let allPokemonNames = []; // Stores all Pokémon names
+    let currentPokemonList = []; // Stores Pokémon displayed on the page
 
-    const fetchPokemon = async () => {
-        //first 151 pokemon  Fetching data for all Pokémon (which is well over 1000) could hit the rate limit, especially if you're making many requests in a short time.
-        const pokemonCount = 151;
+    const fetchAllPokemonNames = async () => {
+        try {
+            const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=10000&offset=0");
+            const data = await response.json();
+            allPokemonNames = data.results; // Store all Pokémon names
+        } catch (error) {
+            console.error("Error fetching Pokémon names:", error);
+        }
+    };
 
-        //This creates an array of length pokemonCount filled with undefined values, e.g if pokemonCount = 5, it creates [undefined, undefined, undefined, undefined, undefined]
-        const promises = Array.from({ length: pokemonCount }, (_, i) =>
-            fetch(`https://pokeapi.co/api/v2/pokemon/${i + 1}`).then(res => res.json())
-            //but after fetching it will become [fetch(...), fetch(...), fetch(...), ...]
-        );
+    const fetchPokemon = async (offset = 0) => {
+        try {
+            const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`);
+            const data = await response.json();
 
-        allPokemon = await Promise.all(promises);    //waits for all the fetch requests to complete and then stores the result in allPokemon
-        updatePagination();
-    }
+            const promises = data.results.map(pokemon => fetch(pokemon.url).then(res => res.json()));
+
+            const pokemonList = await Promise.all(promises); // Fetch detailed Pokémon data
+            displayPokemon(pokemonList);
+            updatePagination(offset, limit, data.count);
+        } catch (error) {
+            console.error("Error fetching Pokémon:", error);
+        }
+    };
 
     const displayPokemon = (pokemonList) => {
-        pokedex.innerHTML = ""; //clears any existing Pokémon displayed before adding new ones
+        pokedex.innerHTML = ""; // Clears any existing Pokémon displayed before adding new ones
         pokemonList.forEach(pokemon => {
-            //for each pokemon new div is crerated
+            // For each Pokémon, a new div is created
             const pokemonElement = document.createElement("div");
             pokemonElement.classList.add("pokemon");
 
-            //pokemon's name capitalized, an image of the pokemon & (joined into a string with commas if there are multiple types
-            pokemonElement.innerHTML =
-                `<h2>${pokemon.name.toUpperCase()}</h2> 
-        <img src = "${pokemon.sprites.front_default}" alt = "${pokemon.name}>"
-        <p>Type: ${pokemon.types.map(type => type.type.name).join(", ")}</p>`
+            // Pokémon's name capitalized, an image of the Pokémon & joined types
+            pokemonElement.innerHTML = `
+                <h2>${pokemon.name.toUpperCase()}</h2> 
+                <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">
+                <p>Type: ${pokemon.types.map(type => type.type.name).join(", ")}</p>
+            `;
 
-            // newly created div element for the Pokémon is appended to the pokedex container
+            // Newly created div element for the Pokémon is appended to the pokedex container
             pokedex.appendChild(pokemonElement);
-        })
-    }
+        });
+    };
 
-    //this function updates the pagination whenever the page changes
-    const updatePagination = () => {
-        const startIndex = (currentPage - 1) * pokemonPerPage;
-        const endIndex = startIndex + pokemonPerPage;
-        const paginatedPokemon = allPokemon.slice(startIndex, endIndex);
-        //paginatedPokemon holds the Pokémon to be displayed on the current page by slicing the allPokemon array
+    const updatePagination = (offset, limit, total) => {
+        pageInfo.textContent = `Page ${offset / limit + 1} of ${Math.ceil(total / limit)}`;
+        prevBtn.disabled = offset === 0;
+        nextBtn.disabled = offset + limit >= total;
+    };
 
-        displayPokemon(paginatedPokemon);  //calls the func which renders Pokémon on the screen
-        pageInfo.textContent = `Page ${currentPage} of ${Math.ceil(allPokemon.length / pokemonPerPage)}`
-
-        prevBtn.disabled = currentPage === 1;  //disables the button if the user is on page 1
-        nextBtn.disabled = currentPage === Math.ceil(allPokemon.length / pokemonPerPage);   //Ddsables the button if the user is on the last page. Math.ceil ->  rounds up the total number of pages
-    }
-
-
-    //Listens for changes in the search input field (#search)
-    inputSearch.addEventListener("input", (event) => {
-        const searchTerm = event.target.value.toLowerCase(); // Gets the current text in the input field and coverts it to lowercase
-        if (searchTerm === "") {  //checks if it's empty
-            updatePagination();   //it calls, which resets the list to show all Pokémon for the current pag
+    inputSearch.addEventListener("input", async (event) => {
+        const searchTerm = event.target.value.toLowerCase();
+        if (searchTerm === "") {
+            fetchPokemon(currentOffset); // Reset to current page
+            return;
+        }
+        const matchingPokemon = allPokemonNames.filter(pokemon => pokemon.name.includes(searchTerm));
+        
+        if (matchingPokemon.length === 0) {
+            pokedex.innerHTML = "<p>No Pokémon found</p>";
             return;
         }
 
-        // filters Pokémon from the allPokemon array based on the search term entered by the user
-        const filteredPokemon = allPokemon.filter(pokemon => pokemon.name.includes(searchTerm));   //allPokemon.filter(...) creates a new array that contains only the Pokémon whose name includes the search term
-        displayPokemon(filteredPokemon);
+        // Fetch details only for first 20 matches to avoid API overload
+        const promises = matchingPokemon.slice(0, 20).map(pokemon => fetch(pokemon.url).then(res => res.json()));
+        const searchResults = await Promise.all(promises);
+
+        displayPokemon(searchResults);
     });
 
     prevBtn.addEventListener("click", () => {
-        if (currentPage > 1) {
-            currentPage--;
-            updatePagination();
+        if (currentOffset > 0) {
+            currentOffset -= limit;
+            fetchPokemon(currentOffset);
         }
     });
 
     nextBtn.addEventListener("click", () => {
-        if (currentPage < Math.ceil(allPokemon.length / pokemonPerPage)) {
-            currentPage++;
-            updatePagination();
-        }
+        currentOffset += limit;
+        fetchPokemon(currentOffset);
     });
-    fetchPokemon();  
-    //Calls the fetchPokemon func to load Pokémon data when the script runs.Ensures Pokémon are fetched before pagination starts
-})
+
+    // Fetch all Pokémon names for searching
+    fetchAllPokemonNames();
+
+    // Fetch first page on load
+    fetchPokemon(currentOffset);
+});
