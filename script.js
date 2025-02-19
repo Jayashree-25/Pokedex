@@ -88,5 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
             updatePagination();
         }
     });
-    fetchPokemon();
+    fetchPokemon();  
+    //Calls the fetchPokemon func to load Pokémon data when the script runs.Ensures Pokémon are fetched before pagination starts
 })
