@@ -29,10 +29,20 @@ const fetchPokemon = async () => {
     updatePagination(); 
 }
 
-// const displayPokemon = (pokemonList) => {
-//     pokedox.innerHTML = ""; //clears any existing Pokémon displayed before adding new ones
-//     pokemonList.forEach(pokemon => {
-//         const pokemonElement = document.createElement("div");
-//         pokemonElement.classList.add("pokemon");
-//     })
-// }
+const displayPokemon = (pokemonList) => {
+    pokedox.innerHTML = ""; //clears any existing Pokémon displayed before adding new ones
+    pokemonList.forEach(pokemon => {
+    //for each pokemon new div is crerated
+        const pokemonElement = document.createElement("div");
+        pokemonElement.classList.add("pokemon");
+
+    //pokemon's name capitalized, an image of the pokemon & (joined into a string with commas if there are multiple types
+        pokemonElement.innerHTML = 
+        `<h2>${pokemon.name.toUpperCase()}</h2> 
+        <img src = "${pokemon.sprites.front_default}" alt = "${pokemon.name}"
+        <p>Type: ${pokemon.types.map(type => type.type.name).join(", ")}</p>`
+    
+    // newly created div element for the Pokémon is appended to the pokedex container
+        pokedox.appendChild(pokemonElement);
+    })
+}
