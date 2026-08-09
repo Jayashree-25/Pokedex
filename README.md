@@ -1,100 +1,50 @@
-Pokédex Web Application 🕹️
-===========================
+# Pokédex
 
-Welcome to the Pokédex Web Application! This project is an interactive and user-friendly platform that allows users to explore detailed information about Pokémon from various generations. With features like search functionality and pagination, users can easily navigate through the extensive list of Pokémon.
+An interactive Pokédex web application that lets you explore Pokémon from all generations. Built with vanilla HTML, CSS, and JavaScript, it fetches live data from the [PokéAPI](https://pokeapi.co/) and renders it in a clean, responsive card grid.
 
-Features ✨
-----------
+## Features
 
--   **Comprehensive Pokémon Data**: Access detailed information including names, images, and types of Pokémon from all generations.
--   **Search Functionality**: Quickly find your favorite Pokémon using the search bar.
--   **Pagination**: Navigate through the Pokémon list seamlessly with previous and next buttons.
+- **Comprehensive Pokémon data** - Names, official sprites, and types for Pokémon from all generations.
+- **Search** - Filter the full Pokémon list in real time as you type.
+- **Pagination** - Browse the list 20 Pokémon at a time with previous/next buttons.
 
-Technologies Used 🛠️
----------------------
+## Tech Stack
 
--   **HTML5**: Structuring the web content.
--   **CSS3**: Styling the application for an appealing user interface.
--   **JavaScript (ES6)**: Implementing dynamic features and functionalities.
--   **Fetch API**: Retrieving data from the [PokéAPI](https://pokeapi.co/).
--   **Responsive Design**: Ensuring compatibility across various devices and screen sizes.
+- **HTML5** - Page structure
+- **CSS3** - Styling and responsive layout
+- **JavaScript (ES6)** - Async fetching and DOM updates
+- **PokéAPI** - Data source
 
-Getting Started 🚀
-------------------
+## Getting Started
 
-To run this project locally, follow these steps:
+This project has no build step or dependencies.
 
-1.  **Clone the Repository**:
+1. Clone the repository:
 
-    ```
-    git clone https://github.com/Jayashree-25/Pokedex.git
+   ```bash
+   git clone <repository-url>
+   cd Pokedex
+   ```
 
-    ```
+2. Open `index.html` in any modern web browser.
 
-2.  **Navigate to the Project Directory**:
+That's it - the app fetches data directly from the PokéAPI.
 
-    ```
-    cd Pokedex
+## Usage
 
-    ```
+- Use the **Prev** / **Next** buttons at the bottom to move between pages of Pokémon.
+- Type a name in the search bar to filter the list; clear the search to return to the current page.
+- Each card shows the Pokémon's name, sprite, and type(s).
 
-3.  **Open `index.html` in Your Browser**:
-    -   Simply open the `index.html` file in your preferred web browser to view the application.
+## Project Structure
 
-Usage 🎮
---------
+```
+Pokedex/
+├── index.html   # Main page: search bar, Pokémon grid, pagination
+├── script.js    # API fetching, search filtering, pagination logic
+└── style.css    # Styling and responsive design
+```
 
--   **Browsing Pokémon**: Use the pagination buttons at the bottom to navigate through different pages of Pokémon.
--   **Searching Pokémon**: Enter the name of the Pokémon in the search bar to find specific Pokémon. The list will update in real-time based on your input.
+## License
 
-Screenshot
-----------
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/8d456ec5-fd1a-45ce-b528-a9510999f8d4" alt="Screenshot 1" width="300">
-  <img src="https://github.com/user-attachments/assets/c066564c-2a55-4d67-a387-02378ad21345" alt="Screenshot 2" width="300">
-  <img src="https://github.com/user-attachments/assets/d5fff2a2-195b-4cf6-a6dc-a57c2317250e" alt="Screenshot 3" width="300">
-</p>
-
-Contributing 🤝
----------------
-Contributions are welcome! If you'd like to enhance this project, please follow these steps:
-
-1.  **Fork the Repository**: Click on the 'Fork' button at the top right corner of the repository page.
-2.  **Create a New Branch**:
-
-    ```
-    git checkout -b feature/YourFeatureName
-
-    ```
-
-3.  **Make Your Changes**: Implement your feature or fix.
-4.  **Commit Your Changes**:
-
-    ```
-    git commit -m 'Add some feature'
-
-    ```
-
-5.  **Push to the Branch**:
-
-    ```
-    git push origin feature/YourFeatureName
-
-    ```
-
-6.  **Open a Pull Request**: Navigate to the original repository and click on 'New Pull Request'.
-
-License 📄
-----------
-
-This project is open-source and available under the [MIT License](https://chatgpt.com/c/LICENSE).
-
-Acknowledgements 🙏
--------------------
-
--   Data provided by [PokéAPI](https://pokeapi.co/).
--   Inspired by various Pokédex web applications and tutorials.
-
-For more details, visit the [GitHub Repository](https://github.com/Jayashree-25/Pokedex).
-
-* * * * *
+This project is open source and available under the [MIT License](LICENSE).
